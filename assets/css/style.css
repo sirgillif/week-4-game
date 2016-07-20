@@ -56,7 +56,12 @@ body {
 	color: white;
 	text-align: center;
 }
-
+h1{
+	font-family: harryp;
+	color: white;
+	size: xx-large;
+	text-align: center;
+}
 h3 {
 	color: white;
 	size: xx-large;
