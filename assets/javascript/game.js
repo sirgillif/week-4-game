@@ -45,24 +45,6 @@ $(document).ready(function() {
 		var first=0;
 		var	testBool=false,testBool2=false;
 		for (var i = 0; i < wizards.length; i++) {
-			//console.log("player selected" +player +" opponent selected"+opponent)
-			//for testing purposes only
-			if (i!=player) {
-				testBool=true;
-				//console.log(testBool)
-			}
-			else{
-				testBool=false;
-			}
-			if (i!=opponent) {
-				testBool2=true;
-				//console.log(testBool)
-			}
-			else{
-				testBool2=false;
-			}
-			console.log(i+"!="+player+": "+ testBool+" "+ i+"!="+opponent+""+testBool2)
-			//end of tests
 			if(i!=player&&i!=opponent){
 				var newWiz = $("<div/>").addClass("wizard col-sm-2").attr('wizard-id', i).html('<span class="name">'+ wizards[i].name +'</span><img class="imgWiz" src="assets/images/'+ wizards[i].image +'"><span class="points">'+ wizards[i].health +'</span>');
 				//console.log("displaying: " +wizards[i].name);
@@ -86,7 +68,7 @@ $(document).ready(function() {
 		}
 		$(".wizard").on("click",function(){
 		//select a character with the id of the clicked character
-		selectWizard(this.getAttribute("wizard-id"))
+			selectWizard(this.getAttribute("wizard-id"))
 	})
 	}
 
@@ -95,7 +77,7 @@ $(document).ready(function() {
 		//checks to see if a player has been selected
 
 		if(player===-1&&opponent===-1){
-			console.log("ADDING PLAYER")
+			//console.log("ADDING PLAYER")
 			//if they have not put in the player's index 
 			player=index;
 			//place them on the dueling board
@@ -103,7 +85,7 @@ $(document).ready(function() {
 		}
 		//checks to see if a opponent has been selected
 		else if(opponent===-1){
-			console.log("ADDING Opponent")
+			//console.log("ADDING Opponent")
 			//if they have not put in the opponents's index 
 			opponent=index;
 			//place them on the dueling board
@@ -129,14 +111,25 @@ $(document).ready(function() {
 		//displayWizards();
 	}
 
+	$("#versus").on("click",function(){
+		console.log("attack");
+		//on attack  take away heath from both characters
+		//check and see if either character's hp is <= 0 
+		// if the player is <=0 
+			//game over
+		// if the enemy is <=0 
+			//move enemy to defeated colomn 
+			// go back to enemy selection
+			//if no other enemies exist restart game
+	});
 
 	//make possable players
 	var wizards = new Array(5);
-		wizards[0] = new makeWizard ('Harry', 'harry.jpg', 120, 20, 25);
+		wizards[0] = new makeWizard ('Harry', 'harry.jpg', 120, 15, 25);
 		wizards[1] = new makeWizard ('Ron', 'ron.jpg', 130, 25, 30);
 		wizards[2] = new makeWizard ('Hermione', 'hermione.jpg', 90, 40, 50);
 		wizards[3] = new makeWizard ('Malfoy', 'malfoy.jpg', 150, 35, 40);
-		wizards[4] = new makeWizard ('Neville', 'neville.jpg', 200, 10, 35);
+		wizards[4] = new makeWizard ('Neville', 'neville.jpg', 200, 5, 20);
 
 	//display the players
 	//console.log("displaying");
