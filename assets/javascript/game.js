@@ -32,6 +32,13 @@ var opponent = -1;
 var round = 1;
 //populate players 
 $(document).ready(function() {
+	var win=0;
+	var loss=0;
+	//players
+	var wizards;
+	//this will be for the enemies that lose to the hero
+	var lostWizards = [];
+
 	//functions
 	function makeWizard(name, image, health, attack, counter) {
 		this.name = name;
@@ -45,7 +52,7 @@ $(document).ready(function() {
 		var first=0;
 		var	testBool=false,testBool2=false;
 		for (var i = 0; i < wizards.length; i++) {
-			if(i!=player&&i!=opponent){
+			if(i!=player&&i!=opponent&&wizards[i]!=null){
 				var newWiz = $("<div/>").addClass("wizard col-sm-2").attr('wizard-id', i).html('<span class="name">'+ wizards[i].name +'</span><img class="imgWiz" src="assets/images/'+ wizards[i].image +'"><span class="points">'+ wizards[i].health +'</span>');
 				//console.log("displaying: " +wizards[i].name);
 				if(first===0){
@@ -60,7 +67,8 @@ $(document).ready(function() {
 
 			}
 		}
-		if (player<0) {
+		if (player<0) { 
+
 			$(".rounds").html("<h1>Select your player</h1>");
 		}
 		else if (opponent<0) {
@@ -97,42 +105,124 @@ $(document).ready(function() {
 		displayWizards();
 		if(opponent!==-1){
 			var newWiz = $("<div/>").addClass("opponent col-sm-3").attr('wizard-id', index).html('<span class="name">'+ wizards[index].name +'</span><img class="imgWiz" src="assets/images/'+ wizards[index].image +'"><span class="points">'+ wizards[index].health +'</span>');
-				console.log("displaying: " +wizards[index].name);
+				//console.log("displaying: " +wizards[index].name);
 				$('#opponent').html(newWiz);
 				$(".rounds").html("<h1>Round: "+round+"</h1>");
 		}
 		//otherwise we are placing the player
 		else{
 			var newWiz = $("<div/>").addClass("player col-sm-offset-2 col-sm-3").attr('wizard-id', index).html('<span class="name">'+ wizards[index].name +'</span><img class="imgWiz" src="assets/images/'+ wizards[index].image +'"><span class="points">'+ wizards[index].health +'</span>');
-				console.log("displaying: " +wizards[index].name);
+				//console.log("displaying: " +wizards[index].name);
 				$('#player').html(newWiz);
 				$('#versus').html('<h1>Attack</h1>');
 		}
 		//displayWizards();
 	}
 
+	function refreshDuel(){
+		//console.log("refreshing");
+		$("#opponent").empty();
+		$("#player").empty();
+		$(".rounds").empty();
+		var newWiz = $("<div/>").addClass("opponent col-sm-3").attr('wizard-id', opponent).html('<span class="name">'+ wizards[opponent].name +'</span><img class="imgWiz" src="assets/images/'+ wizards[opponent].image +'"><span class="points">'+ wizards[opponent].health +'</span>');
+		//console.log("displaying: " +wizards[opponent].name);
+		$('#opponent').html(newWiz);
+		$(".rounds").html("<h1>Round: "+round+"</h1>");
+			newWiz = $("<div/>").addClass("player col-sm-offset-2 col-sm-3").attr('wizard-id', player).html('<span class="name">'+ wizards[player].name +'</span><img class="imgWiz" src="assets/images/'+ wizards[player].image +'"><span class="points">'+ wizards[player].health +'</span>');
+		//console.log("displaying: " +wizards[player].name);
+		$('#player').html(newWiz);
+
+	}
+
 	$("#versus").on("click",function(){
 		console.log("attack");
 		//on attack  take away heath from both characters
+		wizards[player].health-=wizards[opponent].counter;
+		console.log(wizards[player].name+" has "+wizards[player].health+" heath left");
+		wizards[opponent].health-=wizards[player].attack*round;
+		console.log(wizards[opponent].name+" has "+wizards[opponent].health+" heath left");
+		//increase the round
+		round++;
+		//refresh the playing field
+		refreshDuel();
 		//check and see if either character's hp is <= 0 
-		// if the player is <=0 
+		if(wizards[player].health<=0){
 			//game over
-		// if the enemy is <=0 
-			//move enemy to defeated colomn 
-			// go back to enemy selection
-			//if no other enemies exist restart game
-	});
+			//console.log("game over");
+			loss++;
+			$(".loss").html("Losses : " +loss);
+			player=-1
+			opponent=-1
+			round=1;
+			createWizards();
+			lostWizards = [];
+			$("#opponent").empty();
+			$("#player").empty();
+			$(".rounds").empty();
+			$("#defeated").empty();
+			$("#versus").empty();
+			displayWizards();
 
-	//make possable players
-	var wizards = new Array(5);
+		}
+		// if the enemy is <=0 
+		else if(wizards[opponent].health<=0){
+			//delete array[i];
+			//move enemy to defeated colomn 
+			var newWiz = $("<div/>").addClass("opponent col-sm-3").attr('wizard-id', opponent).html('<span class="name">'+ wizards[opponent].name +'</span><img class="imgWiz" src="assets/images/'+ wizards[opponent].image +'">');
+				$("#defeated").append(newWiz);
+				//add defated emeny into the defeated array
+				lostWizards.push(wizards[opponent]);
+				//remove enemy fom the wizards array
+				delete wizards[opponent];
+			if(lostWizards.length<=3)
+			{
+				console.log(lostWizards.length);
+				//set up to pick new player
+				opponent=-1;
+				$("#opponent").empty();
+				// go back to enemy selection
+				displayWizards();
+			}
+			//if no other enemies exist restart game
+			else{
+				console.log("win");
+				win++;
+				$(".win").html("Wins :"+win)
+				player=-1
+				opponent=-1
+				round=1;
+				createWizards();
+				lostWizards = [];
+				$("#opponent").empty();
+				$("#player").empty();
+				$(".rounds").empty();
+				$("#defeated").empty();
+				$("#versus").empty();
+				displayWizards();
+
+			}	
+		}
+			
+	});
+	function createWizards(){
+		wizards = new Array(5);
+		wizards[0] = new makeWizard ('Harry', 'harry.jpg', 180, 15, 10);
+		wizards[1] = new makeWizard ('Ron', 'ron.jpg', 180, 10, 15);
+		wizards[2] = new makeWizard ('Hermione', 'hermione.jpg', 100, 30, 35);
+		wizards[3] = new makeWizard ('Malfoy', 'malfoy.jpg', 150, 20, 20);
+		wizards[4] = new makeWizard ('Neville', 'neville.jpg', 200, 5, 10);
+	}
+	
+	/* = new Array(5);
 		wizards[0] = new makeWizard ('Harry', 'harry.jpg', 120, 15, 25);
 		wizards[1] = new makeWizard ('Ron', 'ron.jpg', 130, 25, 30);
 		wizards[2] = new makeWizard ('Hermione', 'hermione.jpg', 90, 40, 50);
 		wizards[3] = new makeWizard ('Malfoy', 'malfoy.jpg', 150, 35, 40);
-		wizards[4] = new makeWizard ('Neville', 'neville.jpg', 200, 5, 20);
-
+		wizards[4] = new makeWizard ('Neville', 'neville.jpg', 200, 5, 20);*/
+	
 	//display the players
 	//console.log("displaying");
+	createWizards();
 	displayWizards();
 	//set on click for player and opponent
 	
