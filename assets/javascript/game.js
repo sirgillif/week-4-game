@@ -135,12 +135,12 @@ $(document).ready(function() {
 	}
 
 	$("#versus").on("click",function(){
-		console.log("attack");
+		//console.log("attack");
 		//on attack  take away heath from both characters
 		wizards[player].health-=wizards[opponent].counter;
-		console.log(wizards[player].name+" has "+wizards[player].health+" heath left");
+		$("#announce").html("<p>"+wizards[player].name+" did "+(wizards[player].attack*round)+" damage</p>");
 		wizards[opponent].health-=wizards[player].attack*round;
-		console.log(wizards[opponent].name+" has "+wizards[opponent].health+" heath left");
+		$("#announce").append("<p>"+wizards[opponent].name+" did "+wizards[opponent].counter+" damage</p>");
 		//increase the round
 		round++;
 		//refresh the playing field
@@ -159,8 +159,10 @@ $(document).ready(function() {
 			$("#opponent").empty();
 			$("#player").empty();
 			$(".rounds").empty();
+			$("#announce").empty()
 			$("#defeated").empty();
 			$("#versus").empty();
+			$("#defeatedTitle").empty();
 			displayWizards();
 
 		}
@@ -168,15 +170,21 @@ $(document).ready(function() {
 		else if(wizards[opponent].health<=0){
 			//delete array[i];
 			//move enemy to defeated colomn 
-			var newWiz = $("<div/>").addClass("opponent col-sm-3").attr('wizard-id', opponent).html('<span class="name">'+ wizards[opponent].name +'</span><img class="imgWiz" src="assets/images/'+ wizards[opponent].image +'">');
-				$("#defeated").append(newWiz);
+			console.log("i should be adding an image here")
+			var newWiz = $("<div/>").addClass("wizard col-sm-3").attr('wizard-id', opponent).html('<span class="name">'+ wizards[opponent].name +'</span><img class="imgWiz" src="assets/images/'+ wizards[opponent].image +'">');
+			$("#defeated").append(newWiz);
+				if(lostWizards.length===0)
+				{
+					$("#defeatedTitle").html("<h1>Enemies Defeated</h>")
+				}
 				//add defated emeny into the defeated array
-				lostWizards.push(wizards[opponent]);
+			lostWizards.push(wizards[opponent]);
 				//remove enemy fom the wizards array
-				delete wizards[opponent];
+			delete wizards[opponent];
 			if(lostWizards.length<=3)
 			{
-				console.log(lostWizards.length);
+				
+				//console.log(lostWizards.length);
 				//set up to pick new player
 				opponent=-1;
 				$("#opponent").empty();
@@ -185,7 +193,7 @@ $(document).ready(function() {
 			}
 			//if no other enemies exist restart game
 			else{
-				console.log("win");
+				//console.log("win");
 				win++;
 				$(".win").html("Wins :"+win)
 				player=-1
@@ -196,8 +204,10 @@ $(document).ready(function() {
 				$("#opponent").empty();
 				$("#player").empty();
 				$(".rounds").empty();
+				$("#announce").empty();
 				$("#defeated").empty();
 				$("#versus").empty();
+				$("#defeatedTitle").empty();
 				displayWizards();
 
 			}	
