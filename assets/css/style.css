@@ -1,6 +1,6 @@
 @font-face {
    font-family: harryp;
-   src: url("http://vignette2.wikia.nocookie.net/harrypotter/images/7/73/Dueling_club.JPG/revision/latest?cb=20080813194336");
+   src: url(../fonts/HARRYP.TTF);
 }
 .title h1{
    font-family: harryp;
@@ -10,7 +10,7 @@
 }
 body {
 	background-color: #001;
-	background-image: url("../images/background.JPG");
+	background-image: url("http://vignette2.wikia.nocookie.net/harrypotter/images/7/73/Dueling_club.JPG/revision/latest?cb=20080813194336");
 	background-repeat: no-repeat;
 	background-size: 100%;
 }
